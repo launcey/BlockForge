@@ -1,0 +1,42 @@
+# scripts/block_analysis.py
+
+import requests
+import pandas as pd
+
+def fetch_block_data(api_url, block_id):
+    """
+    Fetch block data from an API.
+    
+    :param api_url: Base URL of the blockchain API
+    :param block_id: ID of the block to fetch data for
+    :return: DataFrame with block data
+    """
+    response = requests.get(f'{api_url}/blocks/{block_id}')
+    response.raise_for_status()
+    data = response.json()
+    df = pd.DataFrame([data])
+    return df
+
+def analyze_block_data(df):
+    """
+    Analyze block data.
+    
+    :param df: DataFrame with block data
+    :return: Analysis results as DataFrame
+    """
+    analysis = {
+        'block_id': df['id'].iloc[0],
+        'size': df['size'].iloc[0],
+        'transactions': df['transactions'].iloc[0],
+        'timestamp': df['timestamp'].iloc[0]
+    }
+    analysis_df = pd.DataFrame([analysis])
+    return analysis_df
+
+# Example usage:
+# api_url = 'https://api.blockchain.example.com'
+# block_id = 'block_123'
+# block_data_df = fetch_block_data(api_url, block_id)
+# print(block_data_df)
+# block_analysis_df = analyze_block_data(block_data_df)
+# print(block_analysis_df)
